@@ -131,3 +131,50 @@ def gbfs(grid, rows, cols, start, goal, heuristic_name):
                 frontier.add(nb)
 
     return None, visited
+
+# -------------------------------------------------------
+# Run whichever algorithm is selected
+# -------------------------------------------------------
+def run_search(grid, rows, cols, start, goal, algo, heuristic):
+    if algo == "A*":
+        return astar(grid, rows, cols, start, goal, heuristic)
+    else:
+        return gbfs(grid, rows, cols, start, goal, heuristic)
+
+# -------------------------------------------------------
+# Main App
+# -------------------------------------------------------
+class App:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Pathfinding Visualizer")
+
+        # default grid size
+        self.rows = 15
+        self.cols = 20
+
+        # start and goal positions
+        self.start = (0, 0)
+        self.goal  = (self.rows - 1, self.cols - 1)
+
+        # grid data
+        self.grid = self.make_empty_grid()
+
+        # animation state
+        self.running    = False
+        self.path       = []
+        self.path_index = 0
+        self.visited    = set()
+        self.agent_pos  = None
+        self.after_id   = None
+
+        # build the window
+        self.build_controls()
+        self.build_canvas()
+        self.draw_grid()
+
+    def make_empty_grid(self):
+        grid = [[EMPTY] * self.cols for _ in range(self.rows)]
+        grid[self.start[0]][self.start[1]] = START
+        grid[self.goal[0]][self.goal[1]]   = GOAL
+        return grid
